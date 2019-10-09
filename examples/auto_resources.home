@@ -1,0 +1,2 @@
+Library -fstype=smbfs,soft,noowners,noatime,nosuid smb://till:secret@stash/Library
+Downloads -fstype=smbfs,soft,noowners,noatime,nosuid smb://till:secret@stash/downloads

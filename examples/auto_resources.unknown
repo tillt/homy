@@ -1,0 +1,5 @@
+# UNKNOWN
+#Library -fstype=smbfs,soft smb://till:radeceavwsfd@stash/Library
+#Downloads -fstype=smbfs,soft smb://till:radeceavwsfd@stash/downloads
+#Library -fstype=afp afp://till:radeceavwsfd@stash/Library
+#Downloads -fstype=afp afp://till:radeceavwsfd@stash/downloads

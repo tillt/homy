@@ -1,7 +1,0 @@
-# The result will be mounted into /Users/<USERNAME>/<MOUNTS>/<DEVICE>/<SHARE>
-#
-# <SHARE> -fstype=smbfs,soft smb://<NAS_USERNAME>:<NAS_PASSWORD>@<NAS_ADDRESS>/<SHARE_PATH>
-#
-# Examples:
-# Movies -fstype=smbfs,soft smb://till:foobar@192.168.178.52/Movies
-# Music -fstype=smbfs,soft smb://till:foobar@192.168.178.52/Music

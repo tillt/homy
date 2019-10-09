@@ -7,8 +7,7 @@
 #
 # Example:
 # /Users/till/mnt/stash	auto_resources	-noowners,nosuid
-/Users/<USERNAME>/<MOUNTS>/<DEVICE>	auto_resources	-noowners,nosuid
-
+/Users/<USERNAME>/<MOUNTS>/<DEVICE> auto_resources -noowners,nosuid
 +auto_master		# Use directory service
 #/net			-hosts		-nobrowse,hidefromfinder,nosuid
 /home			auto_home	-nobrowse,hidefromfinder

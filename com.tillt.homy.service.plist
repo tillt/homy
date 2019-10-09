@@ -6,15 +6,21 @@
         <string>com.tillt.homy</string>
         <key>ProgramArguments</key>
         <array>
-            <string>/usr/local/bin/homy.sh</string>
+            <string>/Users/till/bin/homy.sh</string>
+            <string>-o</string>
+            <string>Boulderdash5</string>
+            <string>-w</string>
+            <string>D2iQ</string>
+            <string>-t</string>
+            <string>/usr/local/share/homy</string>
         </array>
         <key>RunAtLoad</key>
         <true/>
         <key>UserName</key>
         <string>root</string>
         <key>StandardErrorPath</key>
-        <string>/usr/local/var/log/homy.stderr</string>
+        <string>/usr/local/var/log/homy.log</string>
         <key>StandardOutPath</key>
-        <string>/usr/local/var/log/homy.stdout</string>
+        <string>/usr/local/var/log/homy.log</string>
     </dict>
 </plist>
