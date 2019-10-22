@@ -47,6 +47,8 @@ tail -f /usr/local/var/log/homy.log
 ```
 
 ## homy CLI
+
+| Arg. | Type     | Description          |
 | ---- | -------- | -------------------- |
 | `-o` | SSID     | home WiFi SSID       |
 | `-w` | SSID     | work WiFi SSID       |
