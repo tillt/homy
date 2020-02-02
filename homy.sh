@@ -2,18 +2,14 @@
 
 # homy - location aware configuration management
 
-# homy -o SSID -w SSID [-t PATH] [-d DURATION] | [-h]
-#  -o SSID      home WiFi SSID.
-#  -w SSID      work WiFi SSID.
-#  -t PATH      template location.
-#  -d DURATION  poll delay.
-#  -h
+# homy -c PATH | [-h]
 
 # We use Apple's own WiFi status tool - not sure if that is supported
 # officially.
 AIRPORT=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport
 
 templates=/usr/local/share/homy
+config=/usr/local/etc/homy.json
 delay=10
 home_ssid=""
 work_ssid=""
@@ -95,19 +91,27 @@ function process() {
 }
 
 function init() {
-    local config_path=$templates/homy.json
-
     IFS=$'\n' read -r -d '' -a configs \
-        < <(set -o pipefail; cat $config_path | \
-            jq -r '.[].path' && printf '\0')
+        < <(set -o pipefail; cat $config | \
+            jq -r '.configurations[].path' && printf '\0')
 
     IFS=$'\n' read -r -d '' -a setups \
-        < <(set -o pipefail; cat $config_path | \
-            jq -r '.[].setup' && printf '\0')
+        < <(set -o pipefail; cat $config | \
+            jq -r '.configurations[].setup' && printf '\0')
 
     IFS=$'\n' read -r -d '' -a teardowns \
-        < <(set -o pipefail; cat $config_path | \
-            jq -r '.[].teardown' && printf '\0')
+        < <(set -o pipefail; cat $config | \
+            jq -r '.configurations[].teardown' && printf '\0')
+
+    home_ssid=$(cat $config | jq -r '.home_ssid')
+    work_ssid=$(cat $config | jq -r '.work_ssid')
+    delay=$(cat $config | jq -r '.delay')
+    templates=$(cat $config | jq -r '.templates')
+
+    if [ -z $home_ssid ] || [ -z $work_ssid ]; then
+        usage
+        exit
+    fi
 }
 
 function main() {
@@ -134,17 +138,8 @@ function main() {
 
 while [ "$1" != "" ]; do
     case $1 in
-        -o | --home )           shift
-                                home_ssid=$1
-                                ;;
-        -w | --work )           shift
-                                work_ssid=$1
-                                ;;
-        -d | --delay )          shift
-                                delay=$1
-                                ;;
-        -t | --templates )      shift
-                                templates=$1
+        -c | --config )         shift
+                                config=$1
                                 ;;
         -h | --help )           usage
                                 exit
@@ -154,10 +149,5 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
-
-if [ -z $home_ssid ] || [ -z $work_ssid ]; then
-    usage
-    exit
-fi
 
 main

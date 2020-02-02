@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/etc/auto_resources",
+    "setup": "automount -vc",
+    "teardown": "automount -u"
+  },
+  {
+    "path": "/Users/till/Library/Preferences/com.apple.Music.plist",
+    "setup": "",
+    "teardown": "osascript /Users/till/bin/quit_music.scpt"
+  },
+  {
+    "path": "/Users/till/Library/Preferences/com.apple.AMPLibraryAgent.plist",
+    "setup": "",
+    "teardown": "/Users/till/bin/graceful_terminate.sh AMPLibraryAgent"
+  }
+]

@@ -7,12 +7,8 @@
         <key>ProgramArguments</key>
         <array>
             <string>/Users/till/bin/homy.sh</string>
-            <string>-o</string>
-            <string>Boulderdash5</string>
-            <string>-w</string>
-            <string>D2iQ</string>
-            <string>-t</string>
-            <string>/usr/local/share/homy</string>
+            <string>-c</string>
+            <string>/usr/local/etc/homy.json</string>
         </array>
         <key>RunAtLoad</key>
         <true/>
