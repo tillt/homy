@@ -28,18 +28,23 @@ We are mounting in the user home subtree. There are plenty of good reasons to do
 
 (2) `homy.json` example
 ```json
-[
-  {
-    "path": "/etc/auto_resources",
-    "setup": "automount -vc",
-    "teardown": "automount -u"
-  }
-]
+{
+  "work_ssid": "acme_mega_corp",
+  "home_ssid": "tills_toller_router",
+  "delay": "10",
+  "templates": "/usr/local/share/homy",
+  "configurations":
+  [
+    {
+      "path": "/etc/auto_resources",
+      "setup": "automount -vc",
+      "teardown": "automount -u"
+    }
+  ]
+}
 ```
 
 - copy `com.tillt.homy.service.plist` to `/Library/LaunchDaemons`
-- edit `/Library/LaunchDaemons/com.tillt.homy.service.plist`
-    - see [homy CLI](#homy-cli) for details
 - copy `examples/auto_resources.home`, `examples/auto_resources.work` and `examples/auto_resources.unknown` to e.g. `/usr/local/share/homy`
     - edit all of the above to match your demands; (3) shows an example setup
 
@@ -68,8 +73,4 @@ tail -f /usr/local/var/log/homy.log
 
 | Arg. | Type     | Description            |
 | ---- | -------- | ---------------------- |
-| `-o` | SSID     | home WiFi SSID         |
-| `-w` | SSID     | work WiFi SSID         |
-| `-t` | PATH     | template location      |
 | `-c` | PATH     | configuration location |
-| `-d` | DURATION | poll delay             |
