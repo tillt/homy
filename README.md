@@ -24,7 +24,7 @@ We are mounting in the user home subtree. There are plenty of good reasons to do
 
 ## Setup homy
 
-- edit e.g. `/usr/local/share/homy/homy.json`; (2) shows a minimal automounting configuration example
+- edit e.g. `/usr/local/etc/homy.json`; (2) shows a minimal automounting configuration example
 
 (2) `homy.json` example
 ```json
