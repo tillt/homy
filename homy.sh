@@ -18,13 +18,11 @@ delay=10
 home_ssid=""
 work_ssid=""
 
-# Fpr every configuration we want to update, its location as well as a setup
-# and a teardown command are supplied.
-configs=("/etc/auto_resources")
-setups=("automount -vc")
-teardowns=("automount -u")
-
 last_location=""
+
+configs=()
+setups=()
+teardowns=()
 
 function usage() {
     echo "usage: $0 -o SSID -w SSID [-t PATH] [-d DURATION] | [-h]"
@@ -59,7 +57,7 @@ function process() {
     local location=$(location)
 
     if [ "$location" != "$last_location" ]; then
-        dumpy "Detected location is $location"
+        dumpy "--- $location --------------------------------------------------"
 
         typeset -i i=0 max=${#configs[*]}
 
@@ -70,7 +68,9 @@ function process() {
 
             source_path=$templates/$destination_name.$location
 
-	    if [ -f "$source_path" ]; then
+            if [ -f "$source_path" ]; then
+                dumpy "---- $destination_name ----"
+
                 teardown="${teardowns[$i]}"
                 if [[ ! -z $teardown ]]; then
                     dumpy "Making previously reachable resources unavailable: $teardown"
@@ -78,14 +78,14 @@ function process() {
                 fi
 
                 dumpy "Updating configuration $destination_path"
-	        cp "$source_path" "$destination_path"
+                cp "$source_path" "$destination_path"
 
                 setup="${setups[$i]}"
                 if [[ ! -z $setup ]]; then
                     dumpy "Making location specific resources available: $setup"
                     $($setup)
                 fi
-	    fi
+            fi
 
             i=i+1
         done
@@ -94,14 +94,37 @@ function process() {
     last_location=$location
 }
 
+function init() {
+    local config_path=$templates/homy.json
+
+    IFS=$'\n' read -r -d '' -a configs \
+        < <(set -o pipefail; cat $config_path | \
+            jq -r '.[].path' && printf '\0')
+
+    IFS=$'\n' read -r -d '' -a setups \
+        < <(set -o pipefail; cat $config_path | \
+            jq -r '.[].setup' && printf '\0')
+
+    IFS=$'\n' read -r -d '' -a teardowns \
+        < <(set -o pipefail; cat $config_path | \
+            jq -r '.[].teardown' && printf '\0')
+}
+
 function main() {
     dumpy "= homy starting ===================================================="
+
+    dumpy "== initialize configuration ========================================"
+
+    init
+
     dumpy "Home SSID: ${home_ssid}"
     dumpy "Work SSID: ${work_ssid}"
     dumpy "Templates path: ${templates}"
     dumpy "Delay: ${delay}"
-    dumpy "Configurations: ${configs[*]}"
-    dumpy "--------------------------------------------------------------------"
+    dumpy "Configuration paths: [${configs[*]}]"
+
+    dumpy "== daemon loop ====================================================="
+
     while :
     do
         process
