@@ -6,6 +6,14 @@ Detects connected WIFI and uses it for identifying the current location, enablin
 ## Background
 
 Consider your NAS was only reachable when being at home. Wouldn't it be great if we could automagically mount the NAS when being at home and only then?
+Autofs itself does most of the heavy lifting, but some macOS services may feel really sick when they fail to reach the NAS - namely iTunes / Music is
+well known to totally not get along with removable shares for its media storage location.
+
+This tool was born while trying to get Music.app to support my NAS when at home.
+
+The rest of this documentation is describing that specific usecase while homy itself is flexible enough to do much more.
+
+
 
 ## Setup Automounting
 
@@ -21,6 +29,25 @@ We are mounting in the user home subtree. There are plenty of good reasons to do
 ```
 /Users/<USERNAME>/<MOUNTS>/<DEVICE> auto_resources -noowners,nosuid
 ```
+
+
+## Setup Music.app
+
+- run Music.app using option-start
+- make sure you have the media library selected that points to your NAS shares
+- quit Music.app
+
+- copy `~/Library/Preferences/com.apple.Music.plist` to `/usr/local/share/homy/com.apple.Music.plist.home`
+- copy `~/Library/Preferences/com.apple.Music.plist` to `/usr/local/share/homy/com.apple.Music.plist.unknown`
+- copy `~/Library/Preferences/com.apple.AMPLibraryAgent.plist` to `/usr/local/share/homy/com.apple.AMPLibraryAgent.plist.home`
+- copy `~/Library/Preferences/com.apple.AMPLibraryAgent.plist` to `/usr/local/share/homy/com.apple.AMPLibraryAgent.plist.unknown`
+
+- run Music.app using option-start
+- make sure you have a (new) media library selected that points to your local storage
+- quit Music.app
+
+- copy `~/Library/Preferences/com.apple.Music.plist` to `/usr/local/share/homy/com.apple.Music.plist.work`
+- copy `~/Library/Preferences/com.apple.AMPLibraryAgent.plist` to `/usr/local/share/homy/com.apple.AMPLibraryAgent.plist.work`
 
 ## Setup homy
 

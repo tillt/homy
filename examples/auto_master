@@ -6,8 +6,8 @@
 # instead we are mounting in the user home subtree.
 #
 # Example:
-# /Users/till/mnt/stash	auto_resources	-noowners,nosuid
-/Users/<USERNAME>/<MOUNTS>/<DEVICE> auto_resources -noowners,nosuid
+# /System/Volumes/Data/mnt/stash	auto_resources	-noowners,nosuid
+/System/Volumes/Data/<MOUNTS>/<DEVICE> auto_resources -noowners,nosuid
 +auto_master		# Use directory service
 #/net			-hosts		-nobrowse,hidefromfinder,nosuid
 /home			auto_home	-nobrowse,hidefromfinder

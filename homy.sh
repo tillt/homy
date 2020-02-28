@@ -14,6 +14,8 @@ delay=10
 home_ssid=""
 work_ssid=""
 
+jq_path="/usr/local/bin/jq"
+
 last_location=""
 
 configs=()
@@ -93,20 +95,20 @@ function process() {
 function init() {
     IFS=$'\n' read -r -d '' -a configs \
         < <(set -o pipefail; cat $config | \
-            jq -r '.configurations[].path' && printf '\0')
+            $jq_path -r '.configurations[].path' && printf '\0')
 
     IFS=$'\n' read -r -d '' -a setups \
         < <(set -o pipefail; cat $config | \
-            jq -r '.configurations[].setup' && printf '\0')
+            $jq_path -r '.configurations[].setup' && printf '\0')
 
     IFS=$'\n' read -r -d '' -a teardowns \
         < <(set -o pipefail; cat $config | \
-            jq -r '.configurations[].teardown' && printf '\0')
+            $jq_path -r '.configurations[].teardown' && printf '\0')
 
-    home_ssid=$(cat $config | jq -r '.home_ssid')
-    work_ssid=$(cat $config | jq -r '.work_ssid')
-    delay=$(cat $config | jq -r '.delay')
-    templates=$(cat $config | jq -r '.templates')
+    home_ssid=$(cat $config | $jq_path -r '.home_ssid')
+    work_ssid=$(cat $config | $jq_path -r '.work_ssid')
+    delay=$(cat $config | $jq_path -r '.delay')
+    templates=$(cat $config | $jq_path -r '.templates')
 
     if [ -z $home_ssid ] || [ -z $work_ssid ]; then
         usage
