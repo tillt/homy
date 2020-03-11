@@ -24,7 +24,8 @@
     [self requestStatus];
 }
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
     [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -32,6 +33,12 @@
 {
     NSLog(@"Received status update notification");
     [self requestStatus];
+}
+
+- (void)setStatus:(NSString *)newStatus
+{
+    _status = newStatus;
+    [self updateStatusItemMenu];
 }
 
 - (void)requestStatus
@@ -47,13 +54,11 @@
            dispatch_async(dispatch_get_main_queue(), ^{
                NSLog(@"Error: %@", error);
                self.status = @"Error";
-               [self updateStatusItemMenu];
            });
        } else {
            dispatch_async(dispatch_get_main_queue(), ^{
                NSString *location = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                self.status = [NSString stringWithFormat:@"Location: %@", location];
-               [self updateStatusItemMenu];
            });
        }
    }];
