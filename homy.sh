@@ -52,7 +52,11 @@ function location() {
     echo "$location"
 }
 
-function post() {
+function updateLocationState() {
+    # We default to store the location in "/usr/local/var/run/homy/state".
+    echo -n $1 > $state
+
+    # Tell the status item app about the new state.
     osascript <<EOF
 use framework "Foundation"
 use framework "AppKit"
@@ -69,9 +73,7 @@ function process() {
     if [ "$location" != "$last_location" ]; then
         dumpy "--- $location --------------------------------------------------"
 
-        echo -n $location > $state
-
-        post
+        updateLocationState $location
 
         typeset -i i=0 max=${#configs[*]}
 
