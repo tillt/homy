@@ -10,6 +10,7 @@ AIRPORT=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/
 
 templates=/usr/local/share/homy
 config=/usr/local/etc/homy.json
+state=/usr/local/var/run/homy/state
 delay=10
 home_ssid=""
 work_ssid=""
@@ -51,11 +52,26 @@ function location() {
     echo "$location"
 }
 
+function post() {
+    osascript <<EOF
+use framework "Foundation"
+use framework "AppKit"
+
+set aNC to current application's NSDistributedNotificationCenter's defaultCenter()
+
+aNC's postNotificationName:"TTHomyStatusUpdate" object:(missing value) userInfo:(missing value) deliverImmediately:yes
+EOF
+}
+
 function process() {
     local location=$(location)
 
     if [ "$location" != "$last_location" ]; then
         dumpy "--- $location --------------------------------------------------"
+
+        echo -n $location > $state
+
+        post
 
         typeset -i i=0 max=${#configs[*]}
 
@@ -88,6 +104,10 @@ function process() {
             i=i+1
         done
 
+        dumpy "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
+
+        dumpy "Awaiting next location change..."
+
     fi
     last_location=$location
 }
@@ -109,6 +129,7 @@ function init() {
     work_ssid=$(cat $config | $jq_path -r '.work_ssid')
     delay=$(cat $config | $jq_path -r '.delay')
     templates=$(cat $config | $jq_path -r '.templates')
+    state=$(cat $config | $jq_path -r '.state')
 
     if [ -z $home_ssid ] || [ -z $work_ssid ]; then
         usage

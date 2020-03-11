@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+ <key>Label</key>
+    <string>com.tillt.homy-server</string>
+ <key>KeepAlive</key>
+    <false/>
+ <key>RunAtLoad</key>
+     <false/>
+ <key>ProgramArguments</key>
+ <array>
+  <string>/Users/till/Development/homy/server.sh</string>
+ </array>
+<key>inetdCompatibility</key>
+    <dict>
+        <key>Wait</key>
+        <false/>
+    </dict>
+ <key>Sockets</key>
+    <dict>
+        <key>Listeners</key>
+        <array>
+            <dict>
+                    <key>SockFamily</key>
+                    <string>IPv4</string>
+                    <key>SockServiceName</key>
+                    <string>8998</string>
+                    <key>SockType</key>
+                    <string>stream</string>
+            </dict>
+        </array>
+    </dict>
+</dict>
+</plist>

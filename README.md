@@ -1,4 +1,4 @@
-# Location based configuration management
+# Location based configuration management (for Music.app)
 
 Detects connected WIFI and uses it for identifying the current location, enabling things like configuration of components that are location bound.
 
