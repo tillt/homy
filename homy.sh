@@ -57,14 +57,11 @@ function updateLocationState() {
     echo -n $1 > $state
 
     # Tell the status item app about the new state.
-    osascript <<EOF
+    osascript <<APPLE_SCRIPT_NOTIFY
 use framework "Foundation"
-use framework "AppKit"
-
-set aNC to current application's NSDistributedNotificationCenter's defaultCenter()
-
-aNC's postNotificationName:"TTHomyStatusUpdate" object:(missing value) userInfo:(missing value) deliverImmediately:yes
-EOF
+set myCenter to current application's NSDistributedNotificationCenter's defaultCenter()
+myCenter's postNotificationName:"TTHomyStatusUpdate" object:(missing value) userInfo:(missing value) options:3
+APPLE_SCRIPT_NOTIFY
 }
 
 function process() {
