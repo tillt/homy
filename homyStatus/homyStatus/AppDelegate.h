@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
 @property (nonatomic, strong) NSString *status;
+@property (weak) IBOutlet NSTextView *textView;
 
 @end
 
