@@ -8,11 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+#import "LogWindowController.h"
+
+@interface AppDelegate : NSObject <NSApplicationDelegate, LogWindowDelegate>
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
 @property (nonatomic, strong) NSString *status;
-@property (weak) IBOutlet NSTextView *textView;
 
+@property (nonatomic, strong) LogWindowController *logWindowController;
 @end
 

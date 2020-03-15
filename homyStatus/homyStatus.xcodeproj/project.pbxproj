@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB012107241DC00D00FD29FA /* LogWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB012105241DC00D00FD29FA /* LogWindowController.m */; };
+		BB012108241DC00D00FD29FA /* LogWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BB012106241DC00D00FD29FA /* LogWindowController.xib */; };
 		BB8BCEEF2411B3CA00A19B15 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8BCEEE2411B3CA00A19B15 /* AppDelegate.m */; };
 		BB8BCEF12411B3CB00A19B15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB8BCEF02411B3CB00A19B15 /* Assets.xcassets */; };
 		BB8BCEF42411B3CB00A19B15 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BB8BCEF22411B3CB00A19B15 /* MainMenu.xib */; };
@@ -15,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB012104241DC00D00FD29FA /* LogWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogWindowController.h; sourceTree = "<group>"; };
+		BB012105241DC00D00FD29FA /* LogWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogWindowController.m; sourceTree = "<group>"; };
+		BB012106241DC00D00FD29FA /* LogWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogWindowController.xib; sourceTree = "<group>"; };
 		BB8BCEEA2411B3CA00A19B15 /* homyStatus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = homyStatus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB8BCEED2411B3CA00A19B15 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		BB8BCEEE2411B3CA00A19B15 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -65,6 +70,9 @@
 				BB8BCEF52411B3CB00A19B15 /* Info.plist */,
 				BB8BCEF62411B3CB00A19B15 /* main.m */,
 				BB8BCEF82411B3CB00A19B15 /* homyStatus.entitlements */,
+				BB012104241DC00D00FD29FA /* LogWindowController.h */,
+				BB012105241DC00D00FD29FA /* LogWindowController.m */,
+				BB012106241DC00D00FD29FA /* LogWindowController.xib */,
 			);
 			path = homyStatus;
 			sourceTree = "<group>";
@@ -136,6 +144,7 @@
 			files = (
 				BB8BCEF12411B3CB00A19B15 /* Assets.xcassets in Resources */,
 				BB8BCEF42411B3CB00A19B15 /* MainMenu.xib in Resources */,
+				BB012108241DC00D00FD29FA /* LogWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB8BCEF72411B3CB00A19B15 /* main.m in Sources */,
+				BB012107241DC00D00FD29FA /* LogWindowController.m in Sources */,
 				BB8BCEEF2411B3CA00A19B15 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
