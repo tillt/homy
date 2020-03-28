@@ -10,14 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol LogWindowDelegate <NSObject>
-- (void)updateStatusItemMenu;
-@end
-
 @interface LogWindowController : NSWindowController
-
-@property (nonatomic, weak) id<LogWindowDelegate> delegate;
-- (void)showHide;
+- (void)showWindow;
 - (BOOL)isWindowVisible;
 @end
 

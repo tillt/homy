@@ -15,47 +15,55 @@
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
-                <menuItem title="homyStatus" id="1Xt-HY-uBw">
+                <menuItem title="homy" id="1Xt-HY-uBw">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="homyStatus" systemMenu="apple" id="uQy-DD-JDr">
+                    <menu key="submenu" title="homy" systemMenu="apple" id="503-mS-gSP">
                         <items>
-                            <menuItem title="About homyStatus" id="5kV-Vb-QxS">
+                            <menuItem title="About homy" id="abj-Cc-FLE">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="N41-Fr-Ofb"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
-                            <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
-                            <menuItem title="Services" id="NMo-om-nkz">
+                            <menuItem isSeparatorItem="YES" id="rtm-oZ-fHT"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="Pmx-bx-YTi"/>
+                            <menuItem isSeparatorItem="YES" id="pNP-l4-bqW"/>
+                            <menuItem title="Services" id="gpW-ER-Fjz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
+                                <menu key="submenu" title="Services" systemMenu="services" id="IAX-YO-8dI"/>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                            <menuItem title="Hide homyStatus" keyEquivalent="h" id="Olw-nP-bQN">
+                            <menuItem isSeparatorItem="YES" id="kKI-sl-O6H"/>
+                            <menuItem title="Hide homyStatus" keyEquivalent="h" id="4mj-Ra-Ei2">
                                 <connections>
-                                    <action selector="hide:" target="-1" id="PnN-Uc-m68"/>
+                                    <action selector="hide:" target="-1" id="Exm-MX-EfJ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Hide Others" keyEquivalent="h" id="Vdr-fp-XzO">
+                            <menuItem title="Hide Others" keyEquivalent="h" id="Jal-8J-pgr">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="hideOtherApplications:" target="-1" id="VT4-aY-XCT"/>
+                                    <action selector="hideOtherApplications:" target="-1" id="zOC-FB-yCc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show All" id="Kd2-mp-pUS">
+                            <menuItem title="Show All" id="9ms-HV-DBN">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="unhideAllApplications:" target="-1" id="Dhg-Le-xox"/>
+                                    <action selector="unhideAllApplications:" target="-1" id="06H-fm-TTF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                            <menuItem title="Quit homyStatus" keyEquivalent="q" id="4sb-4s-VLi">
+                            <menuItem isSeparatorItem="YES" id="Ra0-ob-VXN"/>
+                            <menuItem title="Quit homyStatus" keyEquivalent="q" id="CSB-mA-wgd">
                                 <connections>
-                                    <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
+                                    <action selector="terminate:" target="-1" id="xHm-R3-ztY"/>
                                 </connections>
                             </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="File" id="TQj-ak-pn9">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="File" systemMenu="apple" id="aBZ-GG-Jl5">
+                        <items>
+                            <menuItem title="Close" keyEquivalent="w" id="X84-TR-9lR" userLabel="Close Window"/>
                         </items>
                     </menu>
                 </menuItem>

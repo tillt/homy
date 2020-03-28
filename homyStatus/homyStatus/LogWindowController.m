@@ -21,7 +21,8 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 
 @implementation LogWindowController
 
-- (void)windowDidLoad {
+- (void)windowDidLoad
+{
     [super windowDidLoad];
 
     [[self.window standardWindowButton:NSWindowZoomButton] setHidden:YES];
@@ -55,9 +56,6 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 - (BOOL)windowShouldClose:(NSWindow *)sender
 {
     [self closeWindow];
-    if (self.delegate) {
-        [self.delegate updateStatusItemMenu];
-    }
     return NO;
 }
 
@@ -138,22 +136,16 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
     return [self.window isVisible];
 }
 
-- (void)showHide
+- (void)showWindow
 {
-    if ([self isWindowVisible]) {
-        [self closeWindow];
-    } else {
-        // Show window.
-        [self.window makeKeyAndOrderFront:self];
-        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-        // Show application icon.
-        [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
-        // Load log file.
-        [self loadLog:kLogPath];
-    }
-    if (self.delegate) {
-        [self.delegate updateStatusItemMenu];
-    }
+    // Show application icon.
+    [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
+    // Show window.
+    [self.window makeKeyAndOrderFront:self];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+
+    // Load log file.
+    [self loadLog:kLogPath];
 }
 
 @end

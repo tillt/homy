@@ -14,10 +14,10 @@ This tool was born while trying to get Music.app to support my NAS when at home.
 The rest of this documentation is describing that specific usecase while homy itself is flexible enough to do much more.
 
 
-
 ## Setup Automounting
 
-We are mounting in the user home subtree. There are plenty of good reasons to do this instead of old fashioned ways like mounting globally into `/Volumes`.
+NOTE: We are **not** mounting in the user home subtree as that causes bizarre issues on macOS Catalina; see
+We are mounting globally, in the system volume data subtree.
 
 - copy `homy.sh` to `/usr/local/bin`
 - edit `/etc/auto_master`, add (1)
@@ -27,7 +27,18 @@ We are mounting in the user home subtree. There are plenty of good reasons to do
 
 (1) `auto_master` update
 ```
-/Users/<USERNAME>/<MOUNTS>/<DEVICE> auto_resources -noowners,nosuid
+/System/Volumes/Data/<MOUNTS>/<DEVICE> auto_resources -noowners,nosuid
+```
+
+
+### Optional Path Mapping
+
+Additionally, we can map that subtree up into the root folder by using `synthetic.conf`.
+- create or edit `/etc/synthetic.conf`, add (2)
+
+(2) `synthetic.conf` update
+```
+<DEVICE> /System/Volumes/Data/<MOUNTS>/<DEVICE>
 ```
 
 
@@ -51,9 +62,9 @@ We are mounting in the user home subtree. There are plenty of good reasons to do
 
 ## Setup homy
 
-- edit e.g. `/usr/local/etc/homy.json`; (2) shows a minimal automounting configuration example
+- edit e.g. `/usr/local/etc/homy.json`; (3) shows a minimal automounting configuration example
 
-(2) `homy.json` example
+(3) `homy.json` example
 ```json
 {
   "work_ssid": "acme_mega_corp",
@@ -73,9 +84,9 @@ We are mounting in the user home subtree. There are plenty of good reasons to do
 
 - copy `com.tillt.homy.service.plist` to `/Library/LaunchDaemons`
 - copy `examples/auto_resources.home`, `examples/auto_resources.work` and `examples/auto_resources.unknown` to e.g. `/usr/local/share/homy`
-    - edit all of the above to match your demands; (3) shows an example setup
+    - edit all of the above to match your demands; (4) shows an example setup
 
-(3) `auto_resources.home` example
+(4) `auto_resources.home` example
 ```
 Library -fstype=smbfs,soft,noowners,noatime,nosuid smb://till:secret@stash/Library
 Downloads -fstype=smbfs,soft,noowners,noatime,nosuid smb://till:secret@stash/downloads
@@ -83,15 +94,15 @@ Downloads -fstype=smbfs,soft,noowners,noatime,nosuid smb://till:secret@stash/dow
 
 ## Launch homy
 
-- launch homy as shown in (4)
-- check the homy log output (5)
+- launch homy as shown in (5)
+- check the homy log output (6)
 
-(4) launch homy
+(5) launch homy
 ```bash
 sudo launchctl load /Library/LaunchDaemons/com.tillt.homy.service.plist
 ```
 
-(5) check logging
+(6) check logging
 ```bash
 tail -f /usr/local/var/log/homy.log
 ```

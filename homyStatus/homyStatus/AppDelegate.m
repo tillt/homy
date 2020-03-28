@@ -10,6 +10,8 @@
 
 #import <CoreServices/CoreServices.h>
 
+#import "LogWindowController.h"
+
 // Note that this is a bit of a half-assed approach in that
 // for receiveing the current location from the daemon, we
 // request it from an endpoint instead of directly reading
@@ -27,19 +29,37 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 
 @interface AppDelegate ()
 
+@property (nonatomic, strong) LogWindowController *logWindowController;
+
 @end
 
 @implementation AppDelegate
 
 #pragma mark - Notifications
 
+- (void)applicationWillFinishLaunching:(NSNotification *)notification
+{
+    self.status = @"unknown";
+    self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+
+    NSMenu *menu = [[NSMenu alloc] init];
+    [menu addItemWithTitle:@"unknown" action:nil keyEquivalent:@""];
+    [menu addItem:[NSMenuItem separatorItem]];
+    [menu addItemWithTitle:@"Show Logging Window" action:@selector(showLog:) keyEquivalent:@""];
+    [menu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@""];
+    
+    self.statusItem.menu = menu;
+    // Hide application icon.
+    [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
+    [self updateStatusItemImage];
+    [self updateStatusItemMenu];
 
     [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedStatusUpdate:) name:@"TTHomyStatusUpdate" object:nil];
 
-    self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     [self requestStatus];
 }
 
@@ -59,6 +79,7 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 - (void)setStatus:(NSString *)newStatus
 {
     _status = newStatus;
+    [self updateStatusItemImage];
     [self updateStatusItemMenu];
 }
 
@@ -67,38 +88,35 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
    NSURLSessionConfiguration *config = [NSURLSessionConfiguration ephemeralSessionConfiguration];
    NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:config delegate:nil delegateQueue:nil];
 
-   NSURL *url = [NSURL URLWithString:kStatusEndpoint];
-   NSURLRequest *req = [NSURLRequest requestWithURL:url];
+   NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:kStatusEndpoint]];
 
    NSURLSessionDataTask *dataTask = [urlSession dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
        if (error) {
            dispatch_async(dispatch_get_main_queue(), ^{
                NSLog(@"Error: %@", error);
-               self.status = @"Error";
+               self.status = @"error";
            });
        } else {
            dispatch_async(dispatch_get_main_queue(), ^{
                NSString *location = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-               self.status = [NSString stringWithFormat:@"Location: %@", location];
+               self.status = [location stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
            });
        }
    }];
    [dataTask resume];
 }
 
-- (void)updateStatusItemMenu
+- (void)updateStatusItemImage
 {
-    NSImage *image = [NSImage imageNamed:@"StatusImageHome"];
+    NSImage *image = [NSImage imageNamed:[NSString stringWithFormat:@"StatusImage_%@", self.status]];
     [image setTemplate:true];
     self.statusItem.button.image = image;
+}
 
-    NSMenu *menu = [[NSMenu alloc] init];
-    [menu addItemWithTitle:self.status action:@selector(statusItemActivated:) keyEquivalent:@""];
-    [menu addItem:[NSMenuItem separatorItem]];
-    [menu addItemWithTitle:[self.logWindowController isWindowVisible] ? @"Hide Logging Window" : @"Show Logging Window" action:@selector(showLog:) keyEquivalent:@""];
-    [menu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@""];
-    
-    self.statusItem.menu = menu;
+- (void)updateStatusItemMenu
+{
+    NSMenuItem *item = self.statusItem.menu.itemArray[0];
+    item.title = [NSString stringWithFormat:@"Location: %@", self.status];
 }
 
 #pragma mark - Menu actions
@@ -112,14 +130,13 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 {
     if (_logWindowController == nil) {
         _logWindowController = [[LogWindowController alloc] initWithWindowNibName:@"LogWindowController"];
-        _logWindowController.delegate = self;
     }
     return _logWindowController;
 }
 
 - (void)showLog:(id)sender
 {
-    [self.logWindowController showHide];
+    [self.logWindowController showWindow];
 }
 
 @end
