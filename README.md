@@ -1,3 +1,5 @@
+<p align="center"><img src="homyStatus/homyStatus/Assets.xcassets/AppIcon.appiconset/homy256-1.png" /><h1 align="center">homy</h1></p>
+
 # Location based configuration management (for Music.app)
 
 Detects connected WIFI and uses it for identifying the current location, enabling things like configuration of components that are location bound.
@@ -107,8 +109,15 @@ sudo launchctl load /Library/LaunchDaemons/com.tillt.homy.service.plist
 tail -f /usr/local/var/log/homy.log
 ```
 
-## homy CLI
+### homy CLI
 
 | Arg. | Type     | Description            |
 | ---- | -------- | ---------------------- |
 | `-c` | PATH     | configuration location |
+
+
+## Launch homyStatus.app
+
+There is an additional small helper app that allows checking the current status and log from the macOS status menu; homyStatus.app.
+
+![StatusItem](site/images/statusitem.png)
