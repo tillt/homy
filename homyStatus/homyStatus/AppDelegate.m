@@ -10,7 +10,7 @@
 
 #import <CoreServices/CoreServices.h>
 
-#import "LogWindowController.h"
+#import "LogViewController.h"
 
 // Note that this is a bit of a half-assed approach in that
 // for receiveing the current location from the daemon, we
@@ -29,7 +29,7 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 
 @interface AppDelegate ()
 
-@property (nonatomic, strong) LogWindowController *logWindowController;
+@property (nonatomic, strong) NSPopover *popover;
 
 @end
 
@@ -42,6 +42,12 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
     self.status = @"unknown";
     self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 
+    self.statusItem.button.action = @selector(togglePopover:);
+
+    // TODO(tillt): Add menu on right-click. See https://stackoverflow.com/a/4566068/91282
+    /*
+    self.statusItem.button.rightAction = @selector(togglePopover:);
+
     NSMenu *menu = [[NSMenu alloc] init];
     [menu addItemWithTitle:@"unknown" action:nil keyEquivalent:@""];
     [menu addItem:[NSMenuItem separatorItem]];
@@ -49,6 +55,8 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
     [menu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@""];
     
     self.statusItem.menu = menu;
+     */
+
     // Hide application icon.
     [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
@@ -121,22 +129,25 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 
 #pragma mark - Menu actions
 
-- (void)statusItemActivated:(id)sender
+- (void)togglePopover:(id)sender
 {
-    // Shall we do something here?
-}
-
-- (LogWindowController *)logWindowController
-{
-    if (_logWindowController == nil) {
-        _logWindowController = [[LogWindowController alloc] initWithWindowNibName:@"LogWindowController"];
+    if (self.popover == nil) {
+        self.popover = [[NSPopover alloc] init];
+        self.popover.contentViewController = [[LogViewController alloc] initWithNibName:@"LogViewController" bundle:NULL];
+        self.popover.contentSize = NSMakeSize(800.0f, 200.0f);
+        self.popover.animates = YES;
+        self.popover.appearance = [NSAppearance currentAppearance];
     }
-    return _logWindowController;
-}
 
-- (void)showLog:(id)sender
-{
-    [self.logWindowController showWindow];
+    if (self.popover.isShown) {
+        [self.popover performClose:sender];
+    } else {
+        [self.popover showRelativeToRect:self.statusItem.button.bounds ofView:self.statusItem.button preferredEdge:NSRectEdgeMinY];
+        __block AppDelegate *blocksafeSelf = self;
+        [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventTypeLeftMouseDown | NSEventTypeRightMouseDown handler:^(NSEvent *event) {
+            [blocksafeSelf.popover performClose:nil];
+        }];
+    }
 }
 
 @end

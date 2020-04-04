@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16096" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16096"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -27,30 +27,7 @@
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="rtm-oZ-fHT"/>
                             <menuItem title="Preferences…" keyEquivalent="," id="Pmx-bx-YTi"/>
-                            <menuItem isSeparatorItem="YES" id="pNP-l4-bqW"/>
-                            <menuItem title="Services" id="gpW-ER-Fjz">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Services" systemMenu="services" id="IAX-YO-8dI"/>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="kKI-sl-O6H"/>
-                            <menuItem title="Hide homyStatus" keyEquivalent="h" id="4mj-Ra-Ei2">
-                                <connections>
-                                    <action selector="hide:" target="-1" id="Exm-MX-EfJ"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Hide Others" keyEquivalent="h" id="Jal-8J-pgr">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="hideOtherApplications:" target="-1" id="zOC-FB-yCc"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Show All" id="9ms-HV-DBN">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="unhideAllApplications:" target="-1" id="06H-fm-TTF"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="Ra0-ob-VXN"/>
                             <menuItem title="Quit homyStatus" keyEquivalent="q" id="CSB-mA-wgd">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="xHm-R3-ztY"/>
@@ -59,16 +36,20 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="File" id="TQj-ak-pn9">
+                <menuItem title="Window" id="TQj-ak-pn9">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="File" systemMenu="apple" id="aBZ-GG-Jl5">
+                    <menu key="submenu" title="Window" systemMenu="apple" id="aBZ-GG-Jl5">
                         <items>
-                            <menuItem title="Close" keyEquivalent="w" id="X84-TR-9lR" userLabel="Close Window"/>
+                            <menuItem title="Close" keyEquivalent="w" id="X84-TR-9lR" userLabel="Close Window">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="BIt-q6-1Gq"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="140" y="154"/>
+            <point key="canvasLocation" x="145" y="160"/>
         </menu>
     </objects>
 </document>

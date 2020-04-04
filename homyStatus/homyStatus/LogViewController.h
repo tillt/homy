@@ -10,9 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LogWindowController : NSWindowController
-- (void)showWindow;
-- (BOOL)isWindowVisible;
+@interface LogViewController : NSViewController
 @end
 
 NS_ASSUME_NONNULL_END
