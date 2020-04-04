@@ -7,7 +7,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="LogViewController">
             <connections>
-                <outlet property="spinner" destination="Z0l-la-cHr" id="8vM-tl-Sme"/>
                 <outlet property="textView" destination="gYt-FL-ZwB" id="eRZ-Dd-apT"/>
                 <outlet property="view" destination="077-zu-ySE" id="RWV-hA-pqd"/>
             </connections>
@@ -50,10 +49,6 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <progressIndicator wantsLayer="YES" focusRingType="none" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Z0l-la-cHr">
-                        <rect key="frame" x="409" y="164" width="32" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    </progressIndicator>
                 </subviews>
             </view>
             <connections>

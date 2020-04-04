@@ -11,12 +11,13 @@
 NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 
 @interface LogViewController ()
-@property (weak) IBOutlet NSProgressIndicator *spinner;
 @property (weak) IBOutlet NSTextView *textView;
 
 @property (strong) dispatch_source_t fileSystemSource;
 @property (strong) dispatch_io_t channel;
 @property (assign) off_t offset;
+@property (strong) NSMutableString *log;
+
 @end
 
 @implementation LogViewController
@@ -24,7 +25,10 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.log = [NSMutableString string];
 
+    self.offset = 0LL;
     [self loadLog:kLogPath];
 }
 
@@ -48,10 +52,13 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 
     self.fileSystemSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fd, eventMask, observerQueue);
     
-    self.offset = 0LL;
-
     dispatch_source_set_event_handler(self.fileSystemSource, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_source_vnode_flags_t flags = dispatch_source_get_data(self.fileSystemSource);//obtain flags
+            NSLog(@"%lu",flags);
+
+          
+            NSLog(@"FS triggered\n");
             // Load moar!
             [self loadLog:kLogPath];
         });
@@ -69,8 +76,6 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 // that allows further updates when the file changed in size.
 - (void)loadLog:(NSString *)path
 {
-    [self.spinner startAnimation:self];
-
     if (self.channel == nil) {
         self.channel = dispatch_io_create_with_path(
             DISPATCH_IO_RANDOM,
@@ -81,6 +86,7 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
             ^(int error){
                 // Cleanup code.
                 if (error == 0) {
+                    NSLog(@"Error: %d", error);
                     self.channel = nil;
                 }
             });
@@ -88,37 +94,45 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
      
     if (self.channel == nil)
     {
-        [self.spinner stopAnimation:self];
         return;
     }
+    
+    [self.log setString:@""];
 
-    dispatch_io_read(self.channel, self.offset, SIZE_MAX, dispatch_get_main_queue(),
+    dispatch_io_read(self.channel, 0LL, SIZE_MAX, dispatch_get_main_queue(),
         ^(bool done, dispatch_data_t data, int error){
-        [self.spinner stopAnimation:self];
-
         if (error) {
             NSLog(@"Error: %d", error);
             return;
         }
-
+        
         dispatch_data_apply(data,
                             (dispatch_data_applier_t)^(dispatch_data_t region, size_t offset, const void *buffer, size_t size) {
-            NSString *log = [[NSString alloc] initWithBytes:buffer length:size encoding:NSUTF8StringEncoding];
-            
+            NSString *fragment = [[NSString alloc] initWithBytes:buffer length:size encoding:NSUTF8StringEncoding];
+
+            [self.log appendString:fragment];
+
             self.offset += size;
- 
-            NSDictionary *attributes = @{
-                NSFontAttributeName: [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightLight],
-                NSForegroundColorAttributeName: NSColor.textColor
-            };
-            NSAttributedString *attrstr = [[NSAttributedString alloc] initWithString:log attributes:attributes];
-            [self.textView.textStorage appendAttributedString:attrstr];
-            [self.textView scrollRangeToVisible: NSMakeRange(self.textView.string.length, 0)];
+            
+            NSLog(@"offset: %ld", offset);
+            NSLog(@"size: %ld", size);
+            NSLog(@"new offset after this read: %lld", self.offset);
+
 
             return true;  // Keep processing if there is more data.
         });
         
         if (done) {
+            NSLog(@"done with offset: %lld", self.offset);
+
+            NSDictionary *attributes = @{
+                NSFontAttributeName: [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightLight],
+                NSForegroundColorAttributeName: NSColor.textColor
+            };
+            NSAttributedString *attrstr = [[NSAttributedString alloc] initWithString:self.log attributes:attributes];
+            [self.textView.textStorage setAttributedString:attrstr];
+            [self.textView scrollRangeToVisible: NSMakeRange(self.textView.string.length, 0)];
+
             [self setupFSWatcher:path];
         }
     });
