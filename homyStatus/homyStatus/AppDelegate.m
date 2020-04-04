@@ -30,6 +30,7 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 @interface AppDelegate ()
 
 @property (nonatomic, strong) NSPopover *popover;
+@property (nonatomic, strong) NSMenu *statusMenu;
 
 @end
 
@@ -42,26 +43,22 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
     self.status = @"unknown";
     self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 
-    self.statusItem.button.action = @selector(togglePopover:);
-
-    // TODO(tillt): Add menu on right-click. See https://stackoverflow.com/a/4566068/91282
-    /*
-    self.statusItem.button.rightAction = @selector(togglePopover:);
+    self.statusItem.button.action = @selector(statusItemClicked:);
+    [self.statusItem.button sendActionOn:NSEventMaskLeftMouseDown | NSEventMaskRightMouseDown];
 
     NSMenu *menu = [[NSMenu alloc] init];
     [menu addItemWithTitle:@"unknown" action:nil keyEquivalent:@""];
     [menu addItem:[NSMenuItem separatorItem]];
-    [menu addItemWithTitle:@"Show Logging Window" action:@selector(showLog:) keyEquivalent:@""];
-    [menu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@""];
-    
-    self.statusItem.menu = menu;
-     */
+    [menu addItemWithTitle:@"Show Log" action:@selector(showLog:) keyEquivalent:@""];
+    [menu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
+    menu.delegate = self;
+    self.statusMenu = menu;
 
     // Hide application icon.
     [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     [self updateStatusItemImage];
     [self updateStatusItemMenu];
@@ -71,12 +68,12 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
     [self requestStatus];
 }
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification
+- (void)applicationWillTerminate:(NSNotification *)notification
 {
     [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)receivedStatusUpdate:(NSNotification *)aNotification
+- (void)receivedStatusUpdate:(NSNotification *)notification
 {
     NSLog(@"Received status update notification");
     [self requestStatus];
@@ -123,13 +120,13 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
 
 - (void)updateStatusItemMenu
 {
-    NSMenuItem *item = self.statusItem.menu.itemArray[0];
+    NSMenuItem *item = self.statusMenu.itemArray[0];
     item.title = [NSString stringWithFormat:@"Location: %@", self.status];
 }
 
 #pragma mark - Menu actions
 
-- (void)togglePopover:(id)sender
+- (void)showLog:(id)sender
 {
     if (self.popover == nil) {
         self.popover = [[NSPopover alloc] init];
@@ -148,6 +145,41 @@ NSString * const kStatusEndpoint = @"http://127.0.0.1:8998";
             [blocksafeSelf.popover performClose:nil];
         }];
     }
+}
+
+- (IBAction)showStatusMenu:(id)sender
+{
+    self.statusItem.menu = self.statusMenu;
+    [self.statusItem.button performClick:nil];
+}
+
+
+- (void)statusItemClicked:(id)sender
+{
+    NSEvent *currentEvent = [NSApp currentEvent];
+
+    if  ((([currentEvent modifierFlags] & NSEventModifierFlagControl) == NSEventModifierFlagControl) ||
+         (([currentEvent modifierFlags] & NSEventModifierFlagCommand) == NSEventModifierFlagCommand) ||
+         (([currentEvent modifierFlags] & NSEventMaskRightMouseUp) == NSEventMaskRightMouseUp) ||
+         (([currentEvent modifierFlags] & NSEventMaskRightMouseDown) == NSEventMaskRightMouseDown) ||
+         ([currentEvent type] == NSEventTypeRightMouseDown) ||
+         ([currentEvent type] == NSEventTypeRightMouseUp))
+    {
+        [self showStatusMenu:self];
+    }
+    else
+    {
+        [self showLog:self];
+    }
+}
+
+#pragma mark - Menu delegate
+
+- (void)menuDidClose:(NSMenu *)menu
+{
+    self.statusItem.menu = nil;
+    [self.statusItem.button sendActionOn:NSEventMaskLeftMouseUp | NSEventMaskRightMouseUp];
+    [self.statusItem.button setAction:@selector(statusItemClicked:)];
 }
 
 @end

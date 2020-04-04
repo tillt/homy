@@ -15,8 +15,6 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 
 @property (strong) dispatch_source_t fileSystemSource;
 @property (strong) dispatch_io_t channel;
-@property (assign) off_t offset;
-@property (strong) NSMutableString *log;
 
 @end
 
@@ -26,9 +24,6 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
 {
     [super viewDidLoad];
     
-    self.log = [NSMutableString string];
-
-    self.offset = 0LL;
     [self loadLog:kLogPath];
 }
 
@@ -54,12 +49,6 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
     
     dispatch_source_set_event_handler(self.fileSystemSource, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            dispatch_source_vnode_flags_t flags = dispatch_source_get_data(self.fileSystemSource);//obtain flags
-            NSLog(@"%lu",flags);
-
-          
-            NSLog(@"FS triggered\n");
-            // Load moar!
             [self loadLog:kLogPath];
         });
     });
@@ -84,20 +73,16 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
             0,
             dispatch_get_main_queue(),
             ^(int error){
-                // Cleanup code.
                 if (error == 0) {
-                    NSLog(@"Error: %d", error);
                     self.channel = nil;
                 }
             });
     }
      
     if (self.channel == nil)
-    {
         return;
-    }
     
-    [self.log setString:@""];
+    NSMutableString *theLog = [NSMutableString string];
 
     dispatch_io_read(self.channel, 0LL, SIZE_MAX, dispatch_get_main_queue(),
         ^(bool done, dispatch_data_t data, int error){
@@ -109,31 +94,20 @@ NSString * const kLogPath = @"/usr/local/var/log/homy.log";
         dispatch_data_apply(data,
                             (dispatch_data_applier_t)^(dispatch_data_t region, size_t offset, const void *buffer, size_t size) {
             NSString *fragment = [[NSString alloc] initWithBytes:buffer length:size encoding:NSUTF8StringEncoding];
-
-            [self.log appendString:fragment];
-
-            self.offset += size;
-            
-            NSLog(@"offset: %ld", offset);
-            NSLog(@"size: %ld", size);
-            NSLog(@"new offset after this read: %lld", self.offset);
-
-
-            return true;  // Keep processing if there is more data.
+            [theLog appendString:fragment];
+            return true;
         });
         
         if (done) {
-            NSLog(@"done with offset: %lld", self.offset);
+            [self setupFSWatcher:path];
 
             NSDictionary *attributes = @{
                 NSFontAttributeName: [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightLight],
                 NSForegroundColorAttributeName: NSColor.textColor
             };
-            NSAttributedString *attrstr = [[NSAttributedString alloc] initWithString:self.log attributes:attributes];
+            NSAttributedString *attrstr = [[NSAttributedString alloc] initWithString:theLog attributes:attributes];
             [self.textView.textStorage setAttributedString:attrstr];
             [self.textView scrollRangeToVisible: NSMakeRange(self.textView.string.length, 0)];
-
-            [self setupFSWatcher:path];
         }
     });
 }
